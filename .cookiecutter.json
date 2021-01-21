@@ -1,0 +1,10 @@
+{
+  "_template": "gh:cjolowicz/cookiecutter-hypermodern-python",
+  "author": "Timothy H. Click",
+  "email": "tclick@okstate.edu",
+  "friendly_name": "Amber Generator",
+  "github_user": "tclick",
+  "package_name": "ambgen",
+  "project_name": "ambgen",
+  "version": "0.0.0"
+}
