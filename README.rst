@@ -71,7 +71,7 @@ To learn more, see the `Contributor Guide`_.
 License
 -------
 
-Distributed under the terms of the MIT_ license,
+Distributed under the terms of the BSD_ license,
 *Amber Generator* is free and open source software.
 
 
@@ -90,7 +90,7 @@ This project was generated from `@cjolowicz`_'s `Hypermodern Python Cookiecutter
 
 .. _@cjolowicz: https://github.com/cjolowicz
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _MIT: http://opensource.org/licenses/MIT
+.. _BSD: https://opensource.org/licenses/BSD-3-Clause
 .. _PyPI: https://pypi.org/
 .. _Hypermodern Python Cookiecutter: https://github.com/cjolowicz/cookiecutter-hypermodern-python
 .. _file an issue: https://github.com/tclick/ambgen/issues
