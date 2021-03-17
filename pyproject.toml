@@ -1,32 +1,45 @@
 [tool.poetry]
 name = "ambgen"
-version = "0.0.0"
+version = "1.0.0"
 description = "Amber Generator"
 authors = ["Timothy H. Click <tclick@okstate.edu>"]
-license = "MIT"
+license = "BSD 3-Clause"
 readme = "README.rst"
 homepage = "https://github.com/tclick/ambgen"
 repository = "https://github.com/tclick/ambgen"
 documentation = "https://ambgen.readthedocs.io"
 classifiers = [
-    "Programming Language :: Python :: 3.6",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
 ]
 
 [tool.poetry.urls]
 Changelog = "https://github.com/tclick/ambgen/releases"
 
 [tool.poetry.dependencies]
-python = "^3.6.1"
+python = "^3.9"
 click = "^7.0"
+scikit-learn = "^0.24"
+scipy = "^1.6"
+numpy = "^1.20"
+pandas = "^1.2"
+pytraj = "^2.0"
+MDanalysis = "^1.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.1.2"
+pytest-cache = "^1.0"
+pytest-click = "^1.0.2"
+pytest-console-scripts = "^1.1.0"
+pytest-cov = "^2.11.1"
+pytest-flake8 = "^1.0.7"
+pytest-mock = "^3.5.1"
+pytest-pep8 = "^1.0.6"
+pytest-randomly = "^3.5.0"
 coverage = {extras = ["toml"], version = "^5.3"}
 safety = "^1.9.0"
-mypy = "^0.790"
+mypy = "^0.812"
 typeguard = "^2.9.1"
 xdoctest = {extras = ["colors"], version = "^0.15.0"}
 sphinx = "^3.3.1"
@@ -45,6 +58,9 @@ pre-commit-hooks = "^3.3.0"
 sphinx-rtd-theme = "^0.5.0"
 sphinx-click = "^2.5.0"
 Pygments = "^2.7.2"
+ipython = "^7.21.0"
+isort = "^5.7.0"
+towncrier = "^19.2.0"
 
 [tool.poetry.scripts]
 ambgen = "ambgen.__main__:main"
@@ -63,3 +79,82 @@ fail_under = 100
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.towncrier]
+    package = "nox"
+    filename = "docs/changelog.rst"
+    directory = "docs/changelog"
+    template = "docs/changelog/template.jinja2"
+    title_format = "v{version} ({project_date})"
+    issue_format = "`#{issue} <https://github.com/tox-dev/tox/issues/{issue}>`_"
+    underlines = ["-", "^"]
+
+    [[tool.towncrier.section]]
+        path = ""
+
+    [[tool.towncrier.type]]
+        directory = "bugfix"
+        name = "Bugfixes"
+        showcontent = true
+
+    [[tool.towncrier.type]]
+        directory = "feature"
+        name = "Features"
+        showcontent = true
+
+    [[tool.towncrier.type]]
+        directory = "deprecation"
+        name = "Deprecations (removal in next major release)"
+        showcontent = true
+
+    [[tool.towncrier.type]]
+        directory = "breaking"
+        name = "Backward incompatible changes"
+        showcontent = true
+
+    [[tool.towncrier.type]]
+        directory = "doc"
+        name = "Documentation"
+        showcontent = true
+
+    [[tool.towncrier.type]]
+        directory = "misc"
+        name = "Miscellaneous"
+        showcontent = true
+
+[tool.black]
+line-length = 88
+target-version = ['py38']
+include = '\.pyi?$'
+exclude = '''
+
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+  | foo.py           # also separately exclude a file named foo.py in
+                     # the root of the project
+)
+'''
+
+[tool.pylint.messages_control]
+disable = "C0330, C0326"
+
+[tool.pylint.format]
+max-line-length = "88"
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 88
