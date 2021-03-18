@@ -1,0 +1,50 @@
+#!/bin/bash
+#  Copyright (C) 2020-{{ year }} by Timothy H. Click <tclick@okstate.edu>
+#
+#  Permission to use, copy, modify, and/or distribute this software for any purpose
+#  with or without fee is hereby granted.
+#
+#  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+#  REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+#  FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+#  INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+#  OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+#  TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+#  THIS SOFTWARE.
+#
+
+AMBERHOME={{ data.amberhome }}
+PMEMD="${AMBERHOME}/bin/{{ data.pmemd }}"
+GPU="${AMBERHOME}/bin/pmemd.cuda"
+
+if [[ ! -e "${GPU}" ]]
+then
+    echo "An Amber executable is missing. Please ensure that the proper path is provided."
+    exit 1
+fi
+
+DIR={{ data.simdir }}
+MDTYPE=Prod
+PREFIX={{ data.prefix }}
+MDDIR=${DIR}/${MDTYPE}
+PREV=${DIR}/Equil/md16
+REFERENCE=${DIR}/Equil/md15/${PREFIX}.rst7
+TOPOLOGY=${DIR}/Prep/${PREFIX}.parm7
+
+JOBS=(init prod)
+for RUN in "${JOBS[@]}"
+do
+    RUNDIR=${MDDIR}/${RUN}
+    INPUT=${RUNDIR}/${RUN}.in
+    INPCRD=${PREV}/${PREFIX}.rst7
+
+    ${GPU} -O \
+        -i ${INPUT} -p ${TOPOLOGY} -c ${INPCRD} -ref ${REFERENCE} \
+        -o ${RUNDIR}/${RUN}.out -r ${RUNDIR}/${PREFIX}.rst7 \
+        -x ${RUNDIR}/${RUN}.nc -e ${RUNDIR}/${RUN}.energy \
+        -inf ${RUNDIR}/${RUN}.info  -l ${RUNDIR}/${RUN}.log
+
+    PREV=${MDDIR}/${RUN}
+done
+
+exit 0

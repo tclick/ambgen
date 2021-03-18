@@ -1,0 +1,87 @@
+#!/bin/bash
+#  Copyright (C) 2020-{{ year }} by Timothy H. Click <tclick@okstate.edu>
+#
+#  Permission to use, copy, modify, and/or distribute this software for any purpose
+#  with or without fee is hereby granted.
+#
+#  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+#  REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY AND
+#  FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+#  INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS
+#  OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+#  TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
+#  THIS SOFTWARE.
+#
+
+AMBERHOME={{ data.amberhome }}
+PMEMD="${AMBERHOME}/bin/{{ data.pmemd }}"
+GPU="${AMBERHOME}/bin/pmemd.cuda"
+
+if [[ ! -e "${PMEMD}" || ! -e "${GPU}" ]]
+then
+    echo "An Amber executable is missing. Please ensure that the proper path is provided."
+    exit 1
+fi
+if [[ "$(basename ${PMEMD})" == "pmemd.MPI" ]]
+then
+    PMEMD="mpirun -np 2 ${PMEMD}"
+fi
+
+DIR={{ data.simdir }}
+MDTYPE=Equil
+PREFIX={{ data.prefix }}
+MDDIR=${DIR}/${MDTYPE}
+PREV=../Prep
+DPRE=${PREV}
+TOPOLOGY=${DIR}/Prep/${PREFIX}.parm7
+
+JOBS=(min1 min2 min3 min4 md1 md2 \
+      min11 md11 min12 md12 min13 md13 \
+      min14 md14 min15 md15 md16)
+for RUN in "${JOBS[@]}"
+do
+    RUNDIR=${MDDIR}/${RUN}
+    INPUT=${RUNDIR}/${RUN}.in
+
+    case "${RUN}" in
+        min1 )
+            INPCRD=${MDDIR}/${PREV}/${PREFIX}.crd ;;
+        * )
+            INPCRD=${MDDIR}/${PREV}/${PREFIX}.nc ;;
+    esac
+
+    case "${RUN}" in
+        min1 )
+            REFERENCE=${MDDIR}/${PREV}/${PREFIX}.crd ;;
+        min1[2-6] )
+            REFERENCE=${MDDIR}/${DPRE}/${PREFIX}.rst7 ;;
+        * )
+            REFERENCE=${MDDIR}/${PREV}/${PREFIX}.rst7 ;;
+    esac
+
+    case "${RUN}" in
+        min[1-2] | md2 | md16 )
+            ${PMEMD} -O \
+                -i ${INPUT} -p ${TOPOLOGY} -c ${INPCRD} -ref ${REFERENCE} \
+                -o ${RUNDIR}/${RUN}.out -r ${RUNDIR}/${PREFIX}.rst7 \
+                -x ${RUNDIR}/${RUN}.nc -e ${RUNDIR}/${RUN}.energy \
+                -inf ${RUNDIR}/${RUN}.info  -l ${RUNDIR}/${RUN}.log < /dev/null ;;
+        * )
+            ${GPU} -O \
+                -i ${INPUT} -p ${TOPOLOGY} -c ${INPCRD} -ref ${REFERENCE} \
+                -o ${RUNDIR}/${RUN}.out -r ${RUNDIR}/${PREFIX}.rst7 \
+                -x ${RUNDIR}/${RUN}.nc -e ${RUNDIR}/${RUN}.energy \
+                -inf ${RUNDIR}/${RUN}.info  -l ${RUNDIR}/${RUN}.log
+            if [[ -e "${RUNDIR}/fort.16" ]]
+            then
+                RESTART=${RUNDIR}/${PREFIX}.rst7
+                mv ${RUNDIR}/fort.16 ${RESTART}
+                echo "${RUNDIR}/fort.16 -> ${RESTART}"
+            fi ;;
+    esac
+
+    DPRE=${PREV}
+    PREV=${RUN}
+done
+
+exit 0
