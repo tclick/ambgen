@@ -19,7 +19,7 @@ from typing import TypeVar
 import MDAnalysis as mda
 import pytraj as pt
 from numpy.typing import ArrayLike
-from pandas._typing import DataFrame
+from pandas._typing import FrameOrSeries
 
 PathLike = TypeVar("PathLike", str, Path)
 Trajectory = TypeVar("Trajectory", pt.Trajectory, pt.TrajectoryIterator)
