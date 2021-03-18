@@ -16,6 +16,7 @@ import logging
 import subprocess
 from dataclasses import asdict
 from pathlib import Path
+from subprocess import PIPE
 from typing import Dict, Literal, NoReturn
 
 import numpy as np
@@ -52,7 +53,8 @@ def run_tleap(
     template : str
         Jinja2 template to use
     """
-    command = f"tleap -f {infile} > {logfile}"
+    logfile = Path(logfile)
+    command = f"tleap -f {infile}"
     try:
         infile = Path(infile)
         with infile.open(mode="w") as inf:
@@ -66,7 +68,8 @@ def run_tleap(
 
     try:
         logger.info("Generating AMBER topology and coordinate files.")
-        subprocess.check_call(command, shell=True)
+        with logfile.open(mode="w") as log:
+            subprocess.check_call(command, shell=True, stdout=PIPE, stderr=log)
     except (FileNotFoundError, subprocess.CalledProcessError):
         logger.exception("Could not run tleap", exc_info=True)
 
