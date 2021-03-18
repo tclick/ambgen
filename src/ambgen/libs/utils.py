@@ -16,7 +16,7 @@ import logging
 import subprocess
 from dataclasses import asdict
 from pathlib import Path
-from subprocess import PIPE
+from subprocess import STDOUT
 from typing import Dict, Literal, NoReturn
 
 import numpy as np
@@ -73,7 +73,7 @@ def run_tleap(
     try:
         logger.info("Generating AMBER topology and coordinate files.")
         with logfile.open(mode="w") as log:
-            subprocess.check_call(command, shell=True, stdout=PIPE, stderr=log)
+            subprocess.check_call(command, shell=True, stdout=log, stderr=STDOUT)
     except (FileNotFoundError, subprocess.CalledProcessError):
         logger.exception("Could not run tleap", exc_info=True)
 
