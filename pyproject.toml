@@ -27,6 +27,7 @@ pandas = "^1.2.3"
 pytraj = "^2.0.5"
 MDanalysis = "^1.0"
 jinja2 = "^2.11.3"
+biopython = "^1.78"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.2"
