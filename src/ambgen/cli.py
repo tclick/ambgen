@@ -35,6 +35,7 @@ from typing import List, NoReturn, Tuple, Union
 
 import click
 from click import core
+from . import __version__
 
 CONTEXT_SETTINGS = dict(
     auto_envvar_prefix="COMPLEX", help_option_names=["-h", "--help"]
@@ -113,7 +114,7 @@ class _ComplexCLI(click.MultiCommand):
 
 
 @click.command(cls=_ComplexCLI, context_settings=CONTEXT_SETTINGS)
-@click.version_option()
+@click.version_option(__version__)
 def main():
     """Main command-line interface"""
     pass
