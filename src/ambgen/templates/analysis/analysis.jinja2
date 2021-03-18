@@ -1,0 +1,24 @@
+parm {{ data.dry_topology }}
+trajin {{ data.dry_input }}
+{{ if data.reference }}
+reference {{ data.ref_input }}
+{{  endif }}
+rms first mass
+
+{{ if data.rmsf10 }}
+matrix mwcovar name mwcovmat out {{ data.outdir }}/mwcovmat.dat
+matrix correl name correl @CA out {{ data.outdir }}/correlDCCM.dat
+diagmatrix mwcovmat name diag out {{ data.outdir }}/evecs.dat vecs 10 \
+    thermo outthermo {{ data.outdir }}/thermo.dat temp 300.0
+modes fluct name diag beg 1 end 10 out {{ data.outdir }}/rmsf10.dat
+{{ endif }}
+{{ if data.rms2d }}
+rms2d @CA out {{ data.outdir }}/rms2d.gnu mass
+{{ endif }}
+{{ if data.rmsf }}
+atomicfluct out {{ data.outdir }}/rmsf.noh.gnu !(@H*) byres
+atomicfluct out {{ data.outdir }}/rmsf.ca.gnu @CA byres
+{{ endif }}
+
+go
+exit

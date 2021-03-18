@@ -1,0 +1,11 @@
+parm {{ data.topology }}
+trajin {{ data.input }}
+trajout {{ data.output }} start {{ data.start }} stop {{ data.stop }} offset {{ data.offset }}
+strip :WAT
+strip :Na+
+strip :Cl-
+autoimage
+rms first mass
+average {{ data.crdout }} nc
+go
+quit

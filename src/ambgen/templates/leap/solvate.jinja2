@@ -1,0 +1,20 @@
+loadamberparams frcmod.ionsjc_spce
+source leaprc.protein.ff14SB
+source leaprc.DNA.OL15
+source leaprc.RNA.OL3
+source leaprc.water.spce
+source leaprc.gaff2
+
+# Read structure file and save unsolvated system
+protein = loadpdb {{ input }}
+
+# Neutralize system with ions and solvate
+charge protein
+addions protein Na+ 0
+addions protein Cl- 0
+solvatebox protein SPCBOX 8
+
+savepdb protein {{ prefix }}.pdb
+saveamberparm protein {{ prefix }}.parm7 {{ prefix }}.crd
+
+quit
