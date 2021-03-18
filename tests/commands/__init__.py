@@ -12,14 +12,3 @@
 #  TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF
 #  THIS SOFTWARE.
 # --------------------------------------------------------------------------------------
-import stat
-
-FILE_MODE = (
-    stat.S_ISUID
-    | stat.S_ISVTX
-    | stat.S_IRWXU
-    | stat.S_IRGRP
-    | stat.S_IXGRP
-    | stat.S_IROTH
-    | stat.S_IXOTH
-)
