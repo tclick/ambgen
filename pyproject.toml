@@ -18,20 +18,16 @@ classifiers = [
 Changelog = "https://github.com/tclick/ambgen/releases"
 
 [tool.poetry.dependencies]
-python = "^3.8.8"
+python = ">=3.8.8,<3.9"
 click = "^7.1"
 scikit-learn = "^0.24"
 scipy = "^1.6"
-numpy = "^1.20"
+numpy = "^1.16"
 pandas = "^1.2"
 pytraj = "^2.0"
-MDanalysis = "^1.0"
 jinja2 = "^2.11"
-biopython = "^1.78"
 seaborn = "^0.11.1"
-dask = "^2.30"
-cupy = "^8.4"
-cudf = "^0.6"
+dask = "^2021.3.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.2"
