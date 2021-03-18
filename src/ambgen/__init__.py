@@ -19,7 +19,7 @@ from typing import Dict
 logger: logging.Logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
-__version__: str = "0.1.0"
+__version__: str = "1.0.0"
 
 
 def create_logging_dict(logfile: str) -> Dict:
