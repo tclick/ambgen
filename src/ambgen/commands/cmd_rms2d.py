@@ -48,7 +48,6 @@ from ..libs.typing import PathLike, Trajectory
 @click.option(
     "-o",
     "--outfile",
-    "pdbfile",
     metavar="FILE",
     default=Path.cwd().joinpath("rms2d.csv").as_posix(),
     show_default=True,
@@ -110,13 +109,6 @@ from ..libs.typing import PathLike, Trajectory
     help="Output type for figure",
 )
 @click.option(
-    "--ft",
-    "fig_type",
-    default="bar",
-    type=click.Choice(["bar", "line"], case_sensitive=False),
-    help="Graph type to draw",
-)
-@click.option(
     "--width",
     default=10,
     type=click.IntRange(min=1, clamp=True),
@@ -139,7 +131,6 @@ def cli(
     calc_type: str,
     image: bool,
     image_type: str,
-    fig_type: str,
     width: int,
     dpi: float,
 ):
