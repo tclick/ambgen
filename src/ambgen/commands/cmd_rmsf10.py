@@ -23,11 +23,10 @@ import MDAnalysis as mda
 import numpy as np
 import pytraj as pt
 from MDAnalysis.core.topologyattrs import Tempfactors
-from pydantic import PositiveInt, confloat, conint
 
 from .. import create_logging_dict
 from ..libs import rmsf
-from ..libs.typing import DataFrame, PathLike, Trajectory
+from ..libs.typing import FrameOrSeries, PathLike, Trajectory
 from ..libs.utils import _GRAPHS, save_data
 
 
@@ -37,7 +36,7 @@ def save_pdb(
     /,
     *,
     filename: PathLike,
-    data: DataFrame,
+    data: FrameOrSeries,
 ) -> NoReturn:
     """Replaces the temperature factors in a PDB with the rmsf10 fluctuations.
 
@@ -62,12 +61,12 @@ def save_fig(
     n_residues: int,
     /,
     *,
-    data: DataFrame,
+    data: FrameOrSeries,
     filename: PathLike,
-    n_modes: PositiveInt = 10,
+    n_modes: int = 10,
     figtype: str = "bar",
-    width: PositiveInt = 10,
-    dpi: confloat(strict=True, ge=100.0) = 600.0,
+    width: int = 10,
+    dpi: float,
 ) -> NoReturn:
     """Translate C-alpha fluctuation data into a bar graph.
 
@@ -75,7 +74,7 @@ def save_fig(
     ----------
     n_residues : int
         Number of residues in the system
-    data : DataFrame
+    data : FrameOrSeries
         Fluctuations data
     filename: PathLike
         Image filename
@@ -87,12 +86,8 @@ def save_fig(
         Width of the x-axis lables
     dpi: float
         Resolution of the figure
-
-    Returns
-    -------
-
     """
-    calpha: DataFrame = data.reset_index()
+    calpha: FrameOrSeries = data.reset_index()
     fig: plt.Figure = plt.figure(figsize=plt.figaspect(0.25))
     ax = fig.add_subplot(1, 1, 1)
     _GRAPHS[figtype](
@@ -223,15 +218,15 @@ def cli(
     pdbfile: PathLike,
     datadir: PathLike,
     logfile: PathLike,
-    start: PositiveInt,
-    stop: PositiveInt,
-    offset: PositiveInt,
-    nmodes: PositiveInt,
+    start: int,
+    stop: int,
+    offset: int,
+    nmodes: int,
     image_type: str,
     fig_type: str,
-    width: conint(strict=True, ge=1),
+    width: int,
     image: bool,
-    dpi: confloat(strict=True, ge=100.0),
+    dpi: float,
 ):
     # Setup logging
     logging.config.dictConfig(create_logging_dict(logfile))
