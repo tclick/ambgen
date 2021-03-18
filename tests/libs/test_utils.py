@@ -33,12 +33,12 @@ def test_tleap(template: str, mocker: MockerFixture, tmp_path: Path):
     """
     subprocess = mocker.patch("subprocess.check_call")
     infile = tmp_path.joinpath(Path(template).with_suffix(".in"))
+    prefix = tmp_path.joinpath(template + "_test")
     logfile = tmp_path.joinpath(Path(template).with_suffix(".log"))
 
-    utils.run_tleap(infile, PDB, prefix=template, template=template, logfile=logfile.as_posix())
+    utils.run_tleap(infile, PDB, prefix=prefix.as_posix(), template=template, logfile=logfile.as_posix())
 
     assert infile.exists()
     assert infile.stat().st_size > 0
     assert logfile.exists()
-    assert logfile.stat().st_size > 0
     subprocess.assert_called_once()
