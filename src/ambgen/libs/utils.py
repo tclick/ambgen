@@ -28,6 +28,10 @@ from .typing import ArrayLike, PathLike
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
 
+_GRAPHS: Dict = dict(
+    line=sns.lineplot, bar=sns.barplot, hist=sns.histplot, joint=sns.jointplot
+)
+
 
 def run_tleap(
     infile: PathLike,
