@@ -25,7 +25,7 @@ from ..libs.utils import run_tleap
 
 @click.command("solvate", short_help="Neutralize and solvate a system.")
 @click.option(
-    "-i",
+    "-f",
     "--infile",
     metavar="FILE",
     default=Path.cwd().joinpath("input.pdb"),
