@@ -16,6 +16,7 @@ import logging
 import subprocess
 from dataclasses import asdict
 from pathlib import Path
+from subprocess import PIPE
 from typing import Dict, Literal, NoReturn
 
 import numpy as np
@@ -26,6 +27,10 @@ from .typing import ArrayLike, PathLike
 
 logger = logging.getLogger(__name__)
 logger.addHandler(logging.NullHandler())
+
+_GRAPHS: Dict = dict(
+    line=sns.lineplot, bar=sns.barplot, hist=sns.histplot, joint=sns.jointplot
+)
 
 
 def run_tleap(
@@ -52,7 +57,8 @@ def run_tleap(
     template : str
         Jinja2 template to use
     """
-    command = f"tleap -f {infile} > {logfile}"
+    logfile = Path(logfile)
+    command = f"tleap -f {infile}"
     try:
         infile = Path(infile)
         with infile.open(mode="w") as inf:
@@ -66,6 +72,27 @@ def run_tleap(
 
     try:
         logger.info("Generating AMBER topology and coordinate files.")
-        subprocess.check_call(command, shell=True)
+        with logfile.open(mode="w") as log:
+            subprocess.check_call(command, shell=True, stdout=PIPE, stderr=log)
     except (FileNotFoundError, subprocess.CalledProcessError):
         logger.exception("Could not run tleap", exc_info=True)
+
+
+def save_data(*, data_dir: PathLike, data: object) -> NoReturn:
+    """Save the calculated data into text files.
+
+    Parameters
+    ----------
+    data_dir : PathLike
+        Subdirectory for data files
+    data : dataclass
+        Object containing data
+    """
+    for key, value in asdict(data).items():
+        filename = Path(data_dir).joinpath(Path(key).with_suffix(".csv"))
+        with filename.open("w") as csv:
+            logger.info("Saving %s to %s", key, filename)
+            try:
+                value.to_csv(csv, float_format="%.4f")
+            except AttributeError:
+                np.savetxt(csv, value, fmt="%.4f", delimiter=",")
