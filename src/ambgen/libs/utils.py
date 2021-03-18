@@ -69,3 +69,23 @@ def run_tleap(
         subprocess.check_call(command, shell=True)
     except (FileNotFoundError, subprocess.CalledProcessError):
         logger.exception("Could not run tleap", exc_info=True)
+
+
+def save_data(*, data_dir: PathLike, data: object) -> NoReturn:
+    """Save the calculated data into text files.
+
+    Parameters
+    ----------
+    data_dir : PathLike
+        Subdirectory for data files
+    data : dataclass
+        Object containing data
+    """
+    for key, value in asdict(data).items():
+        filename = Path(data_dir).joinpath(Path(key).with_suffix(".csv"))
+        with filename.open("w") as csv:
+            logger.info("Saving %s to %s", key, filename)
+            try:
+                value.to_csv(csv, float_format="%.4f")
+            except AttributeError:
+                np.savetxt(csv, value, fmt="%.4f", delimiter=",")
