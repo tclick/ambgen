@@ -64,6 +64,8 @@ Pygments = "^2.7.2"
 ipython = "^7.21.0"
 isort = "^5.7.0"
 towncrier = "^19.2.0"
+nox = "^2020.12.31"
+nox-poetry = "^0.8.4"
 
 [tool.poetry.scripts]
 ambgen = "ambgen.__main__:main"
