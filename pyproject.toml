@@ -1,6 +1,6 @@
 [project]
 name = "ambgen"
-version = "1.0.0"
+version = "0.0.1"
 description = "Amber Input File Generator"
 authors = [
     {name = "Timothy H. Click", email = "thclick@umary.edu"},
