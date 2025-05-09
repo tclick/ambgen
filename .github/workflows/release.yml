@@ -52,9 +52,9 @@ jobs:
       - name: Bump version for developmental release
         if: "! steps.check-version.outputs.tag"
         run: |
-          poetry bump patch &&
-          version=$(poetry bump | awk '{ print $2 }') &&
-          poetry bump $version.dev.$(date +%s)
+          poetry version patch &&
+          version=$(poetry version -s) &&
+          poetry version $version.dev.$(date +%s)
 
       - name: Build package
         run: |
