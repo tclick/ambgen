@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-#  ambgen
+#  mdsetup
 #  Copyright (c) 2025 Timothy H. Click, Ph.D.
 #
 #  All rights reserved.
@@ -30,23 +30,22 @@
 #  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 #  DAMAGE.
 # ------------------------------------------------------------------------------
-"""Amber Input File Generator."""
+"""Command-line interface for ambgen."""
 
-import importlib.metadata
+import importlib
+import pkgutil
 
-NAME = __package__
-__version__ = importlib.metadata.version(__package__ or __name__)
-__copyright__: str = """Copyright (C) 2025 Timothy H. Click <thclick@umary.edu>
+import commands
+import typer
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, version 3 of the License.
+app = typer.Typer()
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-"""
+@app.command()
+def main() -> None:
+    """Run main command-line interface."""
+    # Auto-discover and register plugins
+    for _, module_name, _ in pkgutil.iter_modules(commands.__path__):
+        module = importlib.import_module(f"commands.{module_name}")
+        if hasattr(module, "app"):
+            app.add_typer(module.app, name=module_name)

@@ -30,16 +30,16 @@
 #  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 #  DAMAGE.
 # ------------------------------------------------------------------------------
-"""Command-line interface."""
+"""Entrypoint module, in case you use `python -mambgen`.
 
-import click
+Why does this file exist, and why __main__? For more info, read:
 
+- https://www.python.org/dev/peps/pep-0338/
+- https://docs.python.org/2/using/cmdline.html#cmdoption-m
+- https://docs.python.org/3/using/cmdline.html#cmdoption-m
+"""
 
-@click.command()
-@click.version_option()
-def main() -> None:
-    """Amber Input File Generator."""
-
+from ambgen.cli import main
 
 if __name__ == "__main__":
-    main(prog_name="ambgen")  # pragma: no cover
+    main()
