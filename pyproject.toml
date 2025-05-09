@@ -1,0 +1,253 @@
+[project]
+name = "ambgen"
+version = "1.0.0"
+description = "Amber Input File Generator"
+authors = [
+    {name = "Timothy H. Click", email = "thclick@umary.edu"},
+]
+license = {text = "GPL-3.0-or-later"}
+readme = "README.md"
+requires-python = "<4.0,>=3.11"
+keywords = [
+    "molecular dynamics",
+]
+package-mode = true
+classifiers = [
+    "Development Status :: 6 - Mature",
+    "Environment :: Console",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "loguru",
+    "loguru-logging-intercept",
+    "MDAnalysis<3.0,>=2.8",
+    "pydantic",
+    "rich",
+    "typer",
+]
+
+[project.urls]
+Changelog = "https://github.com/tclick/ambgen/releases"
+homepage = "https://github.com/tclick/ambgen"
+repository = "https://github.com/tclick/ambgen"
+documentation = "https://ambgen.readthedocs.io"
+
+[project.scripts]
+ambgen = "ambgen.cli:main"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.bandit]
+exclude_dirs = ["build","dist","tests","scripts"]
+number = 4
+recursive = true
+skips = ["B404", "B603"]
+targets = "src"
+
+[tool.coverage.paths]
+source = ["src", "*/site-packages"]
+tests = ["tests", "*/tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["ambgen", "tests"]
+omit = ["__main__.py"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+fail_under = 70
+exclude_also = [
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "@(abc\\.)?abstractmethod",
+    ]
+
+[tool.flake8]
+max-line-length = 120
+max-complexity = 10
+select = "B,B9,C,D,DAR,E,F,N,RST,W"
+ignore = "E203,E501,N813,RST201,RST203,RST301,W503"
+exclude = [
+    ".eggs",
+    ".git",
+    ".idea",
+    ".tox",
+    ".nox",
+    "nssm",
+    "obj",
+    "out",
+    "packages",
+    "pywin32",
+    "tests",
+    "swagger_client",
+    "noxfile.py"
+]
+docstring-convention = "numpy"
+rst-roles = "class,const,func,meth,mod,ref"
+rst-directives = "deprecated"
+
+[tool.basedpyright]
+typeCheckingMode = "all"
+include = ["src"]
+exclude = ["**/node_modules", "**/__pycache__", "noxfile.py"]
+defineConstant = { DEBUG = true }
+venvPath = "."
+reportMissingImports = true
+reportMissingTypeStubs = false
+reportInvalidTypeVarUse = false
+pythonVersion = "3.12"
+pythonPlatform = "Linux"
+executionEnvironments = [{ root = "tests", reportPrivateUsage = false}, { root = "src" }]
+
+[tool.pytest.ini_options]
+#addopts = "--cov-report xml:coverage.xml --cov tests --cov-fail-under 0 --cov-append -m 'not integration'"
+pythonpath = [
+  "test"
+]
+testpaths = "tests"
+junit_family = "xunit2"
+markers = [
+    "integration: marks as integration test",
+    "notebooks: marks as notebook test",
+    "gpu: marks as gpu test",
+    "slow: marks tests as slow",
+    "unit: fast offline tests",
+]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 120
+fix = true
+
+[tool.ruff.lint]
+preview = true
+select = [
+    # flake8-2020
+    "YTT",
+    # flake8-bandit
+    "S",
+    # flake8-bugbear
+    "B",
+    # flake8-builtins
+    "A",
+    # flake8-comprehensions
+    "C4",
+    # pydocstyle
+    "D",
+    # flake8-debugger
+    "T10",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    # mccabe
+    "C90",
+    # pycodestyle
+    "E", "W",
+    # pyflakes
+    "F",
+    # pygrep-hooks
+    "PGH",
+    # pyupgrade
+    "UP",
+    # ruff
+    "RUF",
+    # tryceratops
+    "TRY",
+    # flake8-errmsg
+    "EM",
+    # flake8-copyright
+    "CPY",
+    # pep8-naming
+    "N",
+    # flake8-annotations
+    "ANN",
+    # flake8-import-conventions
+    "ICN",
+    # flake8-pytest-style
+    "PT",
+    # flake8-quotes
+    "Q",
+    # flake8-return
+    "RET",
+    # flake8-unused-arguments
+    "ARG",
+    # eradicate
+    "ERA",
+    # pandas-vet
+    "PD",
+    # NumPy-specific rules
+    "NPY201",
+]
+ignore = [
+    # LineTooLong
+    "E501",
+    # DoNotAssignLambda
+    "E731",
+    # Undefined local with import star
+    "F403",
+    # Camelcase imported as lower case
+    "N813",
+    # Too many arguments to function call
+    "PLR0913",
+    # pytest.raises is too broad
+    "PT011",
+    # module is possibly insecure
+    "S404",
+    # Module shadowing a Python builtin
+    "A005",
+    # Missing type annotation
+    "ANN003",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101", "ANN"]
+"noxfile.py" = ["S101"]
+"docs/*" = ["A001", "CPY001"]
+"cli.py" = ["ARG"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.poetry.group.dev.dependencies]
+basedpyright = "*"
+nox = "*"
+pre-commit = "*"
+pre-commit-hooks = "*"
+python-kacl = "*"
+ruff = "*"
+safety = ">=3"
+typeguard = "*"
+
+[tool.poetry.group.test.dependencies]
+MDAnalysisTests = "<3.0,>=2.5"
+coverage = { version = "*",  extras = ["toml"]}
+pytest = "*"
+pytest-cov = "*"
+pytest-loguru = "*"
+pytest-mock = "*"
+pytest-random-order = "*"
+pytest-github-actions-annotate-failures = "*"
+xdoctest = {version="*", extras=["colors"]}
+
+[tool.poetry.group.docs.dependencies]
+furo = "*"
+myst-parser = "*"
+pymdown-extensions = "*"
+sphinx = ">=8.0"
+sphinx-autobuild = "*"
+sphinx-automodapi = "*"
+sphinx-rtd-theme = ">=2.0"
+sphinx-click = "*"

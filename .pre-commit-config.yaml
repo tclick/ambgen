@@ -1,0 +1,66 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-ast
+      - id: check-added-large-files
+        name: Check for added large files
+        args: ["--maxkb=52428800"]
+        language: system
+      - id: check-merge-conflict
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: check-json
+      - id: pretty-format-json
+        language: system
+        types: [json]
+        args: ["--autofix"]
+      - id: check-toml
+        language: system
+        types: [toml]
+      - id: check-yaml
+        language: system
+        types: [yaml]
+      - id: debug-statements
+      - id: end-of-file-fixer
+        name: Fix End of Files
+        language: system
+        types: [text]
+      - id: trailing-whitespace
+        name: Trim Trailing Whitespace
+        language: system
+        types: [text]
+      - id: mixed-line-ending
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.8.3
+    hooks:
+      - id: bandit
+        language: python
+        language_version: python3
+        types: [python]
+        args: ["-c", "pyproject.toml"]
+        additional_dependencies: ["bandit[toml]"]
+  - repo: https://github.com/terrencepreilly/darglint
+    rev: v1.8.1
+    hooks:
+      - id: darglint
+        language: system
+        types: [python]
+        stages: [manual]
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.19.1
+    hooks:
+      - id: pyupgrade
+        types:
+          - python
+        args: ["--py311-plus"]
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.11.8
+    hooks:
+      # Run the linter.
+      - id: ruff
+        args: [ --fix ]
+      # Run the formatter.
+      - id: ruff-format
+        args: [ --preview ]
