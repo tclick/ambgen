@@ -40,7 +40,7 @@ repository = "https://github.com/tclick/ambgen"
 documentation = "https://ambgen.readthedocs.io"
 
 [project.scripts]
-ambgen = "ambgen.cli:main"
+ambgen = "ambgen.cli:app"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

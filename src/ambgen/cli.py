@@ -30,22 +30,60 @@
 #  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 #  DAMAGE.
 # ------------------------------------------------------------------------------
+# pyright: reportAny=false
 """Command-line interface for ambgen."""
 
 import importlib
 import pkgutil
 
-import commands
 import typer
+from rich.console import Console
 
-app = typer.Typer()
+from ambgen import NAME, __copyright__, __version__, commands
+
+console = Console()
+app: typer.Typer = typer.Typer(
+    name=NAME,
+    short_help="Amber input file generator",
+)
 
 
-@app.command()
-def main() -> None:
-    """Run main command-line interface."""
+def version_callback(value: bool) -> None:
+    """Print the version of the package.
+
+    Parameters
+    ----------
+    value : bool
+        Print the version of the package if True
+
+    Raises
+    ------
+    typer.Exit
+        Exit application
+    """
+    if value:
+        console.print(f"{NAME} {__version__}")
+        raise typer.Exit()
+
+
+@app.callback()
+def ambgen(
+    ctx: typer.Context,
+    version: bool = typer.Option(None, "--version", callback=version_callback, is_eager=True, help="Show version"),
+) -> None:
+    """Entry point for the command-line interface.
+
+    Parameters
+    ----------
+    ctx : typer.Context
+        Context for the command-line interface
+    version : bool
+        Show version
+    """
+    console.print(__copyright__)
+
     # Auto-discover and register plugins
     for _, module_name, _ in pkgutil.iter_modules(commands.__path__):
-        module = importlib.import_module(f"commands.{module_name}")
+        module = importlib.import_module(f"ambgen.commands.{module_name}")
         if hasattr(module, "app"):
             app.add_typer(module.app, name=module_name)

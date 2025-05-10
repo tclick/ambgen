@@ -36,7 +36,7 @@ import importlib.metadata
 
 NAME = __package__
 __version__ = importlib.metadata.version(__package__ or __name__)
-__copyright__: str = """Copyright (C) 2025 Timothy H. Click <thclick@umary.edu>
+__copyright__: str = """[bold blue]Copyright © 2025 Timothy H. Click [/bold blue] <thclick@umary.edu>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
