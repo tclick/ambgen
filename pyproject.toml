@@ -190,6 +190,8 @@ select = [
     "PD",
     # NumPy-specific rules
     "NPY201",
+    # pydoclint
+    "DOC",
 ]
 ignore = [
     # LineTooLong
