@@ -127,7 +127,7 @@ markers = [
 ]
 
 [tool.ruff]
-target-version = "py310"
+target-version = "py312"
 line-length = 120
 fix = true
 
@@ -216,7 +216,7 @@ ignore = [
 "tests/*" = ["S101", "ANN"]
 "noxfile.py" = ["S101"]
 "docs/*" = ["A001", "CPY001"]
-"cli.py" = ["ARG"]
+"cli.py" = ["ARG", "D103"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
