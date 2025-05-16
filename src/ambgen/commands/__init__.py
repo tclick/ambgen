@@ -32,6 +32,17 @@
 # ------------------------------------------------------------------------------
 """Subcommands for the application."""
 
+import importlib
+import pkgutil
 import stat
 
+import typer
+
 FILE_MODE = stat.S_ISUID | stat.S_ISVTX | stat.S_IRWXU | stat.S_IRGRP | stat.S_IXGRP | stat.S_IROTH | stat.S_IXOTH
+app = typer.Typer()
+
+for _, module_name, _ in pkgutil.iter_modules(__path__):
+    print(f"Registering plugin: {module_name}")
+    module = importlib.import_module(f"ambgen.commands.{module_name}")
+    if hasattr(module, "app"):
+        app.add_typer(module.app)

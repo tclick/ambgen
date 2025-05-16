@@ -33,19 +33,18 @@
 # pyright: reportAny=false
 """Command-line interface for ambgen."""
 
-import importlib
-import pkgutil
-
 import typer
 from rich.console import Console
 
-from ambgen import NAME, __copyright__, __version__, commands
+from ambgen import NAME, __version__
+from ambgen.commands import app as command_app
 
 console = Console()
 app: typer.Typer = typer.Typer(
     name=NAME,
     short_help="Amber input file generator",
 )
+app.add_typer(command_app)
 
 
 def version_callback(value: bool) -> None:
@@ -71,19 +70,4 @@ def ambgen(
     ctx: typer.Context,
     version: bool = typer.Option(None, "--version", callback=version_callback, is_eager=True, help="Show version"),
 ) -> None:
-    """Entry point for the command-line interface.
-
-    Parameters
-    ----------
-    ctx : typer.Context
-        Context for the command-line interface
-    version : bool
-        Show version
-    """
-    console.print(__copyright__)
-
-    # Auto-discover and register plugins
-    for _, module_name, _ in pkgutil.iter_modules(commands.__path__):
-        module = importlib.import_module(f"ambgen.commands.{module_name}")
-        if hasattr(module, "app"):
-            app.add_typer(module.app, name=module_name)
+    pass
