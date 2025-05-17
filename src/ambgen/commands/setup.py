@@ -30,6 +30,7 @@
 #  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 #  DAMAGE.
 # ------------------------------------------------------------------------------
+# pyright: reportArgumentType=false, reportCallIssue=false
 """Create simulation subdirectories."""
 
 from enum import StrEnum
@@ -46,7 +47,7 @@ from ..libs import logging
 from . import FILE_MODE
 
 DEFAULT_OUTDIR = Path.cwd()
-DEFAULT_LOGFILE = DEFAULT_OUTDIR / "setup.log"
+DEFAULT_LOGFILE = DEFAULT_OUTDIR.joinpath("setup.log").as_posix()
 app = typer.Typer()
 
 

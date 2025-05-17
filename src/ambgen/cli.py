@@ -30,7 +30,7 @@
 #  OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
 #  DAMAGE.
 # ------------------------------------------------------------------------------
-# pyright: reportAny=false
+# pyright: reportAny=false, reportUnusedParameter=false, reportCallInDefaultInitializer=false
 """Command-line interface for ambgen."""
 
 import typer
