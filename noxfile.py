@@ -29,7 +29,7 @@ import nox
 from nox import Session
 
 os.environ.update({"PDM_IGNORE_SAVED_PYTHON": "1"})
-package = "fluctmatch"
+package = "ambgen"
 python_versions = [
     "3.12",
     "3.13",
