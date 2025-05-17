@@ -26,7 +26,7 @@ import os
 import pytest
 from typer.testing import CliRunner
 
-from ambgen import NAME, __version__
+from ambgen import __version__
 from ambgen.cli import app
 
 
@@ -35,7 +35,13 @@ class TestMain:
 
     @pytest.fixture
     def cli_runner(self) -> CliRunner:
-        """Fixture for running the main command."""
+        """Fixture for running the main command.
+
+        Returns
+        -------
+        CliRunner
+            Command-line runner
+        """
         return CliRunner()
 
     def test_help(self, cli_runner: CliRunner) -> None:
@@ -69,8 +75,8 @@ class TestMain:
         """
         result = cli_runner.invoke(app)
 
-        assert f"{NAME} {__version__}" in result.output
-        assert result.exit_code == os.EX_OK
+        assert "Missing command" in result.output
+        assert result.exit_code != os.EX_OK
 
     def test_main_version(self, cli_runner: CliRunner) -> None:
         """Test main with version option.
