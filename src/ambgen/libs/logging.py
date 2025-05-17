@@ -1,4 +1,4 @@
-# ---------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # ambgen
 # Copyright (c) 2013-2024 Timothy H. Click, Ph.D.
 #
@@ -8,16 +8,16 @@
 # License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any
 # later version.
 #
-# Fluctmatch is distributed in the hope that it will be useful, # but WITHOUT ANY WARRANTY; without even the implied
+# Fluctmatch is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
 # warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License along with this program.
-# If not, see <[1](https://www.gnu.org/licenses/)>.
+# If not, see <https://www.gnu.org/licenses/>.
 #
 # Reference:
 # Timothy H. Click, Nixon Raj, and Jhih-Wei Chu. Simulation. Meth Enzymology. 578 (2016), 327-342,
 # Calculation of Enzyme Fluctuograms from All-Atom Molecular Dynamics doi:10.1016/bs.mie.2016.05.024.
-# ---------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # pyright: reportUnknownVariableType=false, reportUnknownMemberType=false, reportUnusedCallResult=false
 # pyright: reportAttributeAccessIssue=false, reportArgumentType=false, reportUnusedParameter=false
 """Logging module for the ambgen package.

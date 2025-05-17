@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------------
-#  mdsetup
+#  ambgen
 #  Copyright (c) 2025 Timothy H. Click, Ph.D.
 #
 #  All rights reserved.
