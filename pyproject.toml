@@ -224,15 +224,10 @@ ignore = [
 convention = "numpy"
 
 [tool.poetry.group.dev.dependencies]
-basedpyright = "*"
 nox = "*"
 nox-poetry = "*"
 pre-commit = "*"
 pre-commit-hooks = "*"
-python-kacl = "*"
-ruff = "*"
-safety = ">=3"
-typeguard = "*"
 
 [tool.poetry.group.test.dependencies]
 MDAnalysisTests = "<3.0,>=2.5"

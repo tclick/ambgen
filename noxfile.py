@@ -26,7 +26,7 @@ import sys
 from pathlib import Path
 
 import nox
-from nox import Session
+from nox_poetry import Session
 
 os.environ.update({"PDM_IGNORE_SAVED_PYTHON": "1"})
 package = "ambgen"
@@ -50,6 +50,7 @@ nox.options.sessions = (
 def precommit(session: Session) -> None:
     """Lint using pre-commit."""
     args = session.posargs or ["run", "--all-files", "--hook-stage=manual", "--show-diff-on-failure"]
+    session.install("pre-commit", "pre-commit-hooks")
     session.run("pre-commit", "install", external=True)
     session.run("pre-commit", *args, external=True)
 
@@ -57,6 +58,7 @@ def precommit(session: Session) -> None:
 @nox.session(python=python_versions[0])
 def safety(session: Session) -> None:
     """Scan dependencies for insecure packages."""
+    session.install("safety")
     session.run(*["safety", "scan", "--full-report", "--ignore=70612,74735"], external=True)
 
 
@@ -73,6 +75,7 @@ def pyright(session: Session) -> None:
         session.posargs
         or f"-p pyproject.toml --pythonversion {session.python} --pythonpath={sys.executable} src".split()
     )
+    session.install("basedpyright")
     session.run("basedpyright", *args, external=True)
 
 
@@ -80,16 +83,30 @@ def pyright(session: Session) -> None:
 def tests(session: Session) -> None:
     """Run the test suite."""
     args = [
-        "--cov",
-        "src",
-        "--cov-report=xml",
-        "--cov-config=pyproject.toml",
+        "--parallel",
+        "-m",
+        "pytest",
         "--random-order",
         "--disable-pytest-warnings",
     ]
 
+    session.install(
+        "MDAnalysisTests",
+        "pytest",
+        "coverage[toml]",
+        "pytest-cov",
+        "pytest-loguru",
+        "pytest-random-order",
+        "pytest-github-actions-annotate-failures",
+        ".",
+    )
     try:
-        session.run("pytest", *args, *session.posargs, external=True)
+        session.run(
+            "coverage",
+            "run",
+            *args,
+            *session.posargs,
+        )
     finally:
         if session.interactive:
             session.notify("coverage", posargs=[])
@@ -100,7 +117,7 @@ def coverage(session: Session) -> None:
     """Produce the coverage report."""
     args = session.posargs or ["report"]
 
-    session.install("coverage[toml]")
+    session.install("coverage[toml]", ".")
 
     if not session.posargs and any(Path().glob(".coverage.*")):
         session.run("coverage", "combine")
@@ -112,6 +129,17 @@ def coverage(session: Session) -> None:
 def typeguard(session: Session) -> None:
     """Runtime type checking using Typeguard."""
     args = ["--typeguard-packages=all", "--random-order", "--disable-pytest-warnings"]
+    session.install(
+        "MDAnalysisTests",
+        "pytest",
+        "coverage[toml]",
+        "pytest-cov",
+        "pytest-loguru",
+        "pytest-random-order",
+        "pytest-github-actions-annotate-failures",
+        "typeguard",
+        ".",
+    )
     session.run("pytest", *args, *session.posargs, external=True)
 
 
@@ -125,11 +153,11 @@ def xdoctest(session: Session) -> None:
         if "FORCE_COLOR" in os.environ:
             args.append("--colored=1")
 
-    session.install("xdoctest[colors]")
+    session.install("xdoctest[colors]", ".")
     session.run("python", "-m", "xdoctest", *args, external=True)
 
 
-@nox.session(name="docs-build", python=python_versions[0])
+@nox.session(name="docs-build", python=python_versions)
 def docs_build(session: Session) -> None:
     """Build the documentation."""
     args = session.posargs or ["docs", "docs/_build"]
@@ -140,10 +168,17 @@ def docs_build(session: Session) -> None:
     if build_dir.exists():
         shutil.rmtree(build_dir)
 
+    session.install(
+        "sphinx",
+        "sphinx-autobuild",
+        "sphinx-rtd-theme",
+        "myst-parser",
+        "sphinx-copybutton",
+    )
     session.run("sphinx-build", *args, external=True)
 
 
-@nox.session(python=python_versions[0])
+@nox.session(python=python_versions)
 def docs(session: Session) -> None:
     """Build and serve the documentation with live reloading on file changes."""
     args = session.posargs or ["--open-browser", "docs", "docs/_build"]

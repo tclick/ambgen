@@ -55,7 +55,7 @@ jobs:
           key: venv-${{ hashFiles('poetry.lock') }}
 
       - name: Install the project dependencies
-        run: poetry install
+        run: poetry install --with dev
 
       - name: Run Nox
         run: poetry run nox -r --python=${{ matrix.python-version }} --session=${{ matrix.session }}
