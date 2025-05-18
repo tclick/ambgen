@@ -55,7 +55,7 @@ def precommit(session: Session) -> None:
     session.run("pre-commit", *args, external=True)
 
 
-@nox.session(python=python_versions[0])
+@nox.session(python=python_versions)
 def safety(session: Session) -> None:
     """Scan dependencies for insecure packages."""
     session.install("safety")
@@ -112,7 +112,7 @@ def tests(session: Session) -> None:
             session.notify("coverage", posargs=[])
 
 
-@nox.session(python=python_versions[0])
+@nox.session(python=python_versions)
 def coverage(session: Session) -> None:
     """Produce the coverage report."""
     args = session.posargs or ["report"]
@@ -125,7 +125,7 @@ def coverage(session: Session) -> None:
     session.run("coverage", *args, external=True)
 
 
-@nox.session(python=python_versions[0])
+@nox.session(python=python_versions)
 def typeguard(session: Session) -> None:
     """Runtime type checking using Typeguard."""
     args = ["--typeguard-packages=all", "--random-order", "--disable-pytest-warnings"]
