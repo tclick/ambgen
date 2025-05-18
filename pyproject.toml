@@ -226,6 +226,7 @@ convention = "numpy"
 [tool.poetry.group.dev.dependencies]
 basedpyright = "*"
 nox = "*"
+nox-poetry = "*"
 pre-commit = "*"
 pre-commit-hooks = "*"
 python-kacl = "*"
