@@ -38,13 +38,12 @@ from itertools import product
 from pathlib import Path
 from typing import Annotated
 
-import rich
 import typer
 from loguru import logger
 
-from .. import __copyright__
-from ..libs import logging
-from . import FILE_MODE
+from ambgen import __copyright__, console
+from ambgen.commands import FILE_MODE
+from ambgen.libs import logging
 
 DEFAULT_OUTDIR = Path.cwd()
 DEFAULT_LOGFILE = DEFAULT_OUTDIR.joinpath("setup.log").as_posix()
@@ -119,7 +118,6 @@ def setup(
     """
     logging.config_logger(name=__name__, logfile=logfile.name, level=verbosity)
 
-    console = rich.console.Console()
     console.print(__copyright__)
 
     dirs = ("Prep", "Equil", "Prod", "Analysis")

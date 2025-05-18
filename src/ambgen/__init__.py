@@ -34,8 +34,10 @@
 
 import importlib.metadata
 
-NAME = __package__
-__version__ = importlib.metadata.version(__package__ or __name__)
+from rich.console import Console
+
+NAME = __package__ or __name__
+__version__ = importlib.metadata.version(NAME)
 __copyright__: str = """[bold blue]Copyright © 2025 Timothy H. Click [/bold blue] <thclick@umary.edu>
 
 This program is free software: you can redistribute it and/or modify
@@ -50,3 +52,5 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
+
+console = Console()

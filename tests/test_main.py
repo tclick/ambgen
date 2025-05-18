@@ -26,7 +26,7 @@ import os
 import pytest
 from typer.testing import CliRunner
 
-from ambgen import __version__
+from ambgen import NAME
 from ambgen.cli import app
 
 
@@ -91,7 +91,7 @@ class TestMain:
             Command-line cli_runner
         """
         result = cli_runner.invoke(app, ["--version"])
-        assert f"{__version__}" in result.output
+        assert f"{NAME}" in result.stdout
         assert result.exit_code == os.EX_OK
 
     def test_main_fails(self, cli_runner: CliRunner) -> None:
