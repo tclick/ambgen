@@ -170,10 +170,15 @@ def docs_build(session: Session) -> None:
 
     session.install(
         "sphinx",
+        "sphinx-click",
         "sphinx-autobuild",
+        "sphinx-automodapi",
         "sphinx-rtd-theme",
         "myst-parser",
         "sphinx-copybutton",
+        "myst-parser",
+        "furo",
+        "pymdown-extensions",
     )
     session.run("sphinx-build", *args, external=True)
 
